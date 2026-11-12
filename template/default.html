@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="generator" content="cyc">
+        <meta name="description" content="Sem Manna's personal academic website.">
+        <title>Sem Manna · {{!!title!!}}</title>
+        <script src="{{##.slab##}}/theme.js"></script>
+        <link rel="stylesheet" href="{{##.slab##}}/vendor/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="{{##.slab##}}/style.css">
+        <script src="{{##.slab##}}/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+        <script src="{{##.slab##}}/site.js" defer></script>
+    </head>
+    <body>
+        <a class="visually-hidden-focusable skip-link" href="#main">Skip to content</a>
+        <header class="site-header">
+            <nav class="navbar navbar-expand-sm container" aria-label="Main navigation">
+                <a class="navbar-brand" href="{{##.slab##}}/index.html"><img class="brand-telescope" src="{{##.slab##}}/icons/telescope.svg" alt="" aria-hidden="true" width="36" height="36">Sem Manna</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#site-navigation" aria-controls="site-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="site-navigation">
+                    {{##menu.html##}}
+                </div>
+            </nav>
+        </header>
+        <main class="container site-main" id="main" tabindex="-1">
+            <h1 class="page-title">{{!!title!!}}</h1>
+            {{!!body!!}}
+        </main>
+        <footer class="container site-footer">
+            {{##footer.html##}}
+        </footer>
+    </body>
+</html>

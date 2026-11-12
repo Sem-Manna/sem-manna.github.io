@@ -1,0 +1,7 @@
+public
+*.posts
+bin/replace
+bin/mtime
+bin/*.exe
+.preview*.log
+__pycache__/
