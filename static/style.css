@@ -82,40 +82,12 @@ a:hover { text-decoration-thickness: 2px; }
 .brand-telescope { display: block; width: 2.25rem; height: 2.25rem; flex: 0 0 auto; }
 
 /* A five-second yarn emergency. Its own clipped layer leaves navigation intact. */
-.header-cat { --cat-width: 8rem; position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 2; }
+.header-cat { --cat-width: 6rem; position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 2; }
 .header-cat-track { position: absolute; inset: 0; animation: cat-cross 5s linear both; }
-.header-cat-drawing { position: absolute; bottom: 0; left: calc(0px - var(--cat-width)); display: block; width: var(--cat-width); height: auto; }
-.header-cat-drawing g, .cat-shadow { transform-box: view-box; }
-.cat-body { transform-origin: 64px 40px; animation: cat-bound .36s ease-in-out infinite; }
-.cat-leg--back { transform-origin: 45px 40px; animation: cat-stride .36s ease-in-out infinite; }
-.cat-leg--front { transform-origin: 78px 40px; animation: cat-stride .36s ease-in-out -.18s infinite; }
-.cat-leg--back.cat-leg--far { animation-delay: -.18s; }
-.cat-leg--front.cat-leg--far { animation-delay: 0s; }
-.cat-tail { transform-origin: 39px 34px; animation: cat-tail-flick .72s ease-in-out infinite; }
-.cat-yarn { transform-origin: 127px 52px; animation: cat-yarn-roll .65s linear infinite; }
-.cat-shadow { transform-origin: 64px 59px; animation: cat-shadow-pulse .36s ease-in-out infinite; }
+.header-cat-drawing { position: absolute; bottom: 0; left: 100%; display: block; width: var(--cat-width); height: auto; }
 @keyframes cat-cross {
     from { transform: translateX(0); }
-    to { transform: translateX(calc(100% + var(--cat-width))); }
-}
-@keyframes cat-bound {
-    0%, 100% { transform: translateY(0) rotate(1deg); }
-    50% { transform: translateY(-4px) rotate(-2deg); }
-}
-@keyframes cat-stride {
-    0%, 100% { transform: rotate(-28deg); }
-    50% { transform: rotate(28deg); }
-}
-@keyframes cat-tail-flick {
-    0%, 100% { transform: rotate(-8deg); }
-    50% { transform: rotate(12deg); }
-}
-@keyframes cat-yarn-roll {
-    to { transform: rotate(360deg); }
-}
-@keyframes cat-shadow-pulse {
-    0%, 100% { transform: scaleX(1); opacity: .18; }
-    50% { transform: scaleX(.8); opacity: .1; }
+    to { transform: translateX(calc(-100% - var(--cat-width))); }
 }
 @media (prefers-reduced-motion: reduce), print {
     .header-cat { display: none; }

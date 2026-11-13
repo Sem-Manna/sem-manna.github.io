@@ -124,6 +124,7 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
             if (event.animationName === "cat-cross") finishVisit();
         });
         header.append(cat);
+        cat.querySelector("svg").setCurrentTime?.(0);
         // Also clean up if an animation-end event is interrupted or unavailable.
         cleanupTimer = window.setTimeout(finishVisit, 6000);
     }

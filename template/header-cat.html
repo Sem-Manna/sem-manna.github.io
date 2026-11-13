@@ -1,49 +1,82 @@
 <template id="header-cat-template">
     <div class="header-cat" aria-hidden="true">
         <div class="header-cat-track">
-            <svg class="header-cat-drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 64" fill="none" focusable="false" aria-hidden="true">
-                <ellipse class="cat-shadow" cx="64" cy="59" rx="35" ry="2.5" fill="#627f92" opacity=".16"/>
-                <g class="cat-body" stroke="#84502c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <g class="cat-tail">
-                        <path d="M39 34C28 33 29 18 18 17C8 16 7 28 14 30" stroke="#84502c" stroke-width="9"/>
-                        <path d="M39 34C28 33 29 18 18 17C8 16 7 28 14 30" stroke="#e9a54b" stroke-width="5.5"/>
-                        <path d="m22 18-2 5m9 3-4 3" stroke="#b97536" stroke-width="2.5"/>
+            <svg class="header-cat-drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 96" fill="none" focusable="false" aria-hidden="true">
+                <!-- Six gallop poses: land, gather, push, fly, tuck, land. -->
+                <ellipse cx="101" cy="87" rx="24" ry="2" fill="#627f92" opacity=".14">
+                    <animate attributeName="rx" values="24;25;22;15;21;24" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values=".14;.18;.12;.06;.1;.14" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="24" cy="87" rx="7" ry="1.5" fill="#627f92" opacity=".15">
+                    <animate attributeName="rx" values="7;4;7" keyTimes="0;.48;1" dur=".84s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values=".15;.04;.15" keyTimes="0;.48;1" dur=".84s" repeatCount="indefinite"/>
+                </ellipse>
+                <g stroke-linecap="round" stroke-linejoin="round">
+                    <animateTransform attributeName="transform" type="translate" values="0 0;0 3;-1 -3;-2 -14;0 -7;0 0" keyTimes="0;.14;.32;.56;.78;1" calcMode="spline" keySplines=".2 .7 .4 1;.4 0 .8 .4;.12 .6 .4 1;.6 0 .9 .4;.35 .4 .65 1" dur=".72s" repeatCount="indefinite"/>
+                    <!-- The tail trails the body instead of moving as a rigid lever. -->
+                    <path d="M124 62C139 59 131 42 145 43" stroke="#d68b42" stroke-width="8">
+                        <animate attributeName="d" values="M124 62C139 59 131 42 145 43;M124 63C137 65 136 49 149 51;M124 60C138 60 140 57 150 54;M125 58C140 59 147 47 146 41;M123 59C134 57 133 37 145 39;M124 62C139 59 131 42 145 43" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <!-- Far paws land a little after the near paws. -->
+                    <path d="M117 64C122 71 126 74 128 79" stroke="#c58449" stroke-width="6">
+                        <animate attributeName="d" values="M117 64C122 71 126 74 128 79;M117 64C116 70 114 76 118 81;M117 64C124 70 128 78 128 83;M117 64C122 67 133 67 136 72;M117 64C121 70 116 74 117 78;M117 64C122 71 126 74 128 79" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M93 62C90 68 82 73 84 81" stroke="#c58449" stroke-width="6">
+                        <animate attributeName="d" values="M93 62C90 68 82 73 84 81;M93 62C93 70 89 73 88 80;M93 62C91 68 88 69 85 67;M93 62C88 68 80 68 73 72;M93 62C92 68 86 74 84 80;M93 62C90 68 82 73 84 81" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M87 57C94 49 109 49 120 55C131 61 130 69 121 73C110 78 96 73 90 69C86 66 84 61 87 57Z" fill="#efb366" stroke="#a66b3e" stroke-width="1.5">
+                        <animate attributeName="d" values="M87 57C94 49 109 49 120 55C131 61 130 69 121 73C110 78 96 73 90 69C86 66 84 61 87 57Z;M87 59C96 53 109 53 120 57C129 61 129 69 120 73C109 77 96 74 90 70C86 67 84 63 87 59Z;M87 55C98 49 112 49 122 54C131 58 132 65 123 69C112 73 97 70 90 66C86 63 84 59 87 55Z;M85 56C97 51 113 50 125 54C135 59 133 65 124 69C112 73 96 70 88 66C84 63 82 59 85 56Z;M88 56C96 47 107 47 117 53C127 59 126 69 117 72C107 76 96 71 91 67C87 64 85 60 88 56Z;M87 57C94 49 109 49 120 55C131 61 130 69 121 73C110 78 96 73 90 69C86 66 84 61 87 57Z" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M94 66C101 71 113 73 120 68" stroke="#ffedcd" stroke-width="5">
+                        <animate attributeName="d" values="M94 66C101 71 113 73 120 68;M94 68C101 72 113 73 120 69;M94 64C103 68 115 70 123 65;M92 64C101 69 116 69 125 65;M95 64C102 70 112 72 118 67;M94 66C101 71 113 73 120 68" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="m109 53-1 5m8-3-2 5" stroke="#d3904e" stroke-width="2.5"/>
+                    <!-- Soft curved legs tuck under the belly and extend in flight. -->
+                    <path d="M115 64C112 73 108 76 111 79" stroke="#e8a55a" stroke-width="7">
+                        <animate attributeName="d" values="M115 64C112 73 108 76 111 79;M115 64C106 67 106 74 112 81;M115 64C123 72 132 77 138 80;M115 64C124 66 133 72 143 72;M115 64C110 68 103 72 109 75;M115 64C112 73 108 76 111 79" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M111 79L108 79" stroke="#fff1d9" stroke-width="5">
+                        <animate attributeName="d" values="M111 79L108 79;M112 81L109 81;M138 80L135 81;M143 72L140 73;M109 75L106 74;M111 79L108 79" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M91 61C88 67 76 74 74 84" stroke="#efb366" stroke-width="7">
+                        <animate attributeName="d" values="M91 61C88 67 76 74 74 84;M91 61C89 69 83 74 85 81;M91 61C87 67 84 65 81 66;M91 61C85 70 74 69 67 72;M91 61C89 68 80 73 78 78;M91 61C88 67 76 74 74 84" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M74 84L71 84" stroke="#fff1d9" stroke-width="5">
+                        <animate attributeName="d" values="M74 84L71 84;M85 81L82 81;M81 66L78 65;M67 72L64 71;M78 78L75 78;M74 84L71 84" keyTimes="0;.14;.32;.56;.78;1" dur=".72s" repeatCount="indefinite"/>
+                    </path>
+                    <!-- A large round head follows the leap with a little lag. -->
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" values="-6 78 57;3 78 57;2 78 57;-5 78 57;-3 78 57;-6 78 57" keyTimes="0;.18;.38;.6;.82;1" dur=".72s" repeatCount="indefinite"/>
+                        <path d="M60 43C57 38 57 27 61 26C65 25 70 31 73 33C78 31 82 32 85 34C89 28 94 27 95 30C98 36 97 43 97 46C100 52 96 62 90 66C82 73 66 70 60 64C54 60 53 50 60 43Z" fill="#f4bc76" stroke="#a66b3e" stroke-width="1.5"/>
+                        <path d="M61 31Q62 39 66 39L69 35Q64 29 61 31ZM88 37L93 40Q95 34 93 32Z" fill="#eaa7a0"/>
+                        <path d="M57 54C62 49 67 53 71 57C75 52 83 54 86 60C90 68 78 70 69 67C62 67 56 63 57 54Z" fill="#fff0d5"/>
+                        <path d="m73 36-1 4m6-5-1 4" stroke="#d79654" stroke-width="2.5"/>
+                        <ellipse cx="64" cy="49" rx="3.1" ry="4.2" fill="#493a38"/>
+                        <ellipse cx="80" cy="48" rx="3.6" ry="4.7" fill="#493a38"/>
+                        <circle cx="63" cy="47.5" r="1.1" fill="#fff"/>
+                        <circle cx="78.8" cy="46.2" r="1.35" fill="#fff"/>
+                        <ellipse cx="85" cy="56" rx="3.3" ry="1.8" fill="#e7a29a" opacity=".65"/>
+                        <path d="M63 55Q66 53 68 55L66 58Z" fill="#b87773"/>
+                        <path d="M66 58Q64 62 61 59M66 58Q68 61 71 59" stroke="#845f52" stroke-width="1.2"/>
+                        <path d="m58 55-7-1m7 5-7 1m25-3 8-1m-7 5 7 1" stroke="#b78864" stroke-width="1"/>
                     </g>
-                    <g class="cat-leg cat-leg--back cat-leg--far">
-                        <path d="M45 40 53 48 48 55" stroke="#a96934" stroke-width="7"/>
-                        <path d="M48 55h-5" stroke="#edcf9f" stroke-width="5"/>
-                    </g>
-                    <g class="cat-leg cat-leg--front cat-leg--far">
-                        <path d="M78 40 86 49 82 55" stroke="#a96934" stroke-width="6"/>
-                        <path d="M82 55h-5" stroke="#edcf9f" stroke-width="5"/>
-                    </g>
-                    <path d="M37 30C44 23 55 24 65 25L81 27C91 31 90 43 79 47C66 51 48 49 39 43C34 40 33 34 37 30Z" fill="#e9a54b"/>
-                    <path d="M50 43c9 3 19 3 28-1" stroke="#fff1cf" stroke-width="5"/>
-                    <path d="m46 26 2 6m7-7 1 6m8-5-1 6" stroke="#b97536" stroke-width="3"/>
-                    <g class="cat-leg cat-leg--back">
-                        <path d="M45 40 38 48 43 56" stroke="#84502c" stroke-width="8"/>
-                        <path d="M45 40 38 48 43 56" stroke="#e9a54b" stroke-width="5"/>
-                        <path d="M43 56h5" stroke="#fff1cf" stroke-width="5"/>
-                    </g>
-                    <g class="cat-leg cat-leg--front">
-                        <path d="M78 40 74 50 80 56" stroke="#84502c" stroke-width="7"/>
-                        <path d="M78 40 74 50 80 56" stroke="#e9a54b" stroke-width="4"/>
-                        <path d="M80 56h5" stroke="#fff1cf" stroke-width="5"/>
-                    </g>
-                    <path d="m82 30 3 12" stroke="#2e8993" stroke-width="5"/>
-                    <circle cx="85" cy="44" r="2.5" fill="#f2ca68" stroke="#a3813d" stroke-width="1.2"/>
-                    <path d="M80 25 81 11 91 19 100 13 102 25C107 27 109 29 110 33C113 34 111 39 106 41C97 45 85 42 81 36C79 33 78 29 80 25Z" fill="#e9a54b"/>
-                    <path d="m83 16 5 5-5 1Zm15 2-4 5 5 1Z" fill="#efb7a2" stroke="none"/>
-                    <path d="M99 33c7-3 14-1 11 5-2 4-10 5-13 1" fill="#fff1cf" stroke="none"/>
-                    <path d="m91 22 1 4m5-4-1 4" stroke="#b97536" stroke-width="2.5"/>
-                    <ellipse cx="102" cy="29" rx="1.8" ry="2.4" fill="#293641" stroke="none"/>
-                    <circle cx="102.5" cy="28.4" r=".6" fill="#fff" stroke="none"/>
-                    <path d="m109 32 3 1-2 2Z" fill="#84502c" stroke-width="1"/>
-                    <path d="M109 36q-1 3-4 2m0-3 9-1m-10 4 9 2" stroke-width="1.1"/>
                 </g>
-                <g class="cat-yarn" stroke="#236b89" stroke-width="1.2" stroke-linecap="round">
-                    <circle cx="127" cy="52" r="8" fill="#83c5cf"/>
-                    <path d="M122 46c8 2 11 6 10 11m-14-6c7-4 13-2 16 2m-14 4c4-7 8-10 12-9m-8 12c-3-5-2-11 2-16"/>
+                <!-- The yarn has its own rhythm, plus a squash on each bounce. -->
+                <g stroke-linecap="round">
+                    <animateTransform attributeName="transform" type="translate" values="0 0;0 -23;0 0" keyTimes="0;.48;1" calcMode="spline" keySplines="0 .6 .4 1;.6 0 1 .4" dur=".84s" repeatCount="indefinite"/>
+                    <path d="M29 82C34 85 38 80 41 82" stroke="#5ca6b5" stroke-width="1.2">
+                        <animate attributeName="d" values="M29 82C34 85 38 80 41 82;M29 82C33 79 38 87 41 84;M29 82C34 85 38 80 41 82" dur=".84s" repeatCount="indefinite"/>
+                    </path>
+                    <g transform="translate(24 86.5)">
+                        <g>
+                            <animateTransform attributeName="transform" type="scale" values="1.15 .8;.94 1.08;1 1;1 1;1.15 .8" keyTimes="0;.08;.48;.9;1" dur=".84s" repeatCount="indefinite"/>
+                            <g stroke="#397f97" stroke-width="1">
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 -6.5" to="-360 0 -6.5" dur=".84s" repeatCount="indefinite"/>
+                                <circle cy="-6.5" r="6.5" fill="#8dced8"/>
+                                <path d="M-4-11Q5-9 4-2M-6-7Q1-12 6-5M-4-2Q-1-10 4-11M0 0Q-5-6 0-13"/>
+                            </g>
+                        </g>
+                    </g>
                 </g>
             </svg>
         </div>
