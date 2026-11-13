@@ -90,12 +90,14 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     if (!header || !template) return;
 
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let remaining = 3 * 60 * 1000;
+    let remaining = 60 * 1000;
     let startedAt = null;
     let waitTimer;
     let cleanupTimer;
     let hasVisited = false;
     let cat;
+    let imageRequest;
+    let imageUrl;
 
     function pauseCountdown() {
         window.clearTimeout(waitTimer);
@@ -107,12 +109,17 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
 
     function finishVisit() {
         window.clearTimeout(cleanupTimer);
+        imageRequest?.abort();
+        imageRequest = null;
         cat?.remove();
         cat = null;
+        if (imageUrl) URL.revokeObjectURL(imageUrl);
+        imageUrl = null;
         document.removeEventListener("visibilitychange", syncCountdown);
         motionPreference.removeEventListener("change", syncCountdown);
         window.removeEventListener("pagehide", leavePage);
         window.removeEventListener("pageshow", syncCountdown);
+        window.removeEventListener("resize", finishVisit);
     }
 
     function startVisit() {
@@ -120,13 +127,39 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
         if (document.hidden || motionPreference.matches || hasVisited) return;
         hasVisited = true;
         cat = template.content.firstElementChild.cloneNode(true);
-        cat.addEventListener("animationend", (event) => {
-            if (event.animationName === "cat-cross") finishVisit();
+        const visit = cat;
+        const image = visit.querySelector("img");
+        const duration = Number(visit.dataset.durationMs);
+        visit.style.setProperty("--cat-duration", `${duration}ms`);
+        visit.addEventListener("animationend", (event) => {
+            if (event.animationName === "header-cat-cross") finishVisit();
         });
-        header.append(cat);
-        cat.querySelector("svg").setCurrentTime?.(0);
-        // Also clean up if an animation-end event is interrupted or unavailable.
-        cleanupTimer = window.setTimeout(finishVisit, 6000);
+        image.addEventListener("load", () => {
+            if (cat !== visit) return;
+            window.clearTimeout(cleanupTimer);
+            visit.classList.add("is-running");
+            cleanupTimer = window.setTimeout(finishVisit, duration + 1000);
+        }, { once: true });
+        image.addEventListener("error", finishVisit, { once: true });
+        header.append(visit);
+        window.addEventListener("resize", finishVisit, { once: true });
+        // Keep a stalled image request from leaving a dormant layer behind.
+        cleanupTimer = window.setTimeout(finishVisit, 15000);
+        imageRequest = new AbortController();
+        // Buffer all frames before giving the GIF a fresh playback clock.
+        fetch(image.dataset.src, { signal: imageRequest.signal })
+            .then((response) => {
+                if (!response.ok) throw new Error("The header animation could not load.");
+                return response.blob();
+            })
+            .then((blob) => {
+                if (cat !== visit) return;
+                imageUrl = URL.createObjectURL(blob);
+                image.src = imageUrl;
+            })
+            .catch(() => {
+                if (cat === visit) finishVisit();
+            });
     }
 
     function syncCountdown() {

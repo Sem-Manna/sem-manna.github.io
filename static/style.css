@@ -81,11 +81,12 @@ a:hover { text-decoration-thickness: 2px; }
 .navbar-brand:hover, .navbar-brand:focus { color: var(--site-nav-active); }
 .brand-telescope { display: block; width: 2.25rem; height: 2.25rem; flex: 0 0 auto; }
 
-/* A five-second yarn emergency. Its own clipped layer leaves navigation intact. */
-.header-cat { --cat-width: 6rem; position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 2; }
-.header-cat-track { position: absolute; inset: 0; animation: cat-cross 5s linear both; }
-.header-cat-drawing { position: absolute; bottom: 0; left: 100%; display: block; width: var(--cat-width); height: auto; }
-@keyframes cat-cross {
+/* The GIF supplies the cat's motion; this layer carries it across the header. */
+.header-cat { --cat-width: 5.25rem; position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 2; }
+.header-cat-track { position: absolute; inset: 0; }
+.header-cat.is-running .header-cat-track { animation: header-cat-cross var(--cat-duration) linear both; }
+.header-cat-image { position: absolute; bottom: 0; left: 100%; display: block; width: var(--cat-width); height: auto; }
+@keyframes header-cat-cross {
     from { transform: translateX(0); }
     to { transform: translateX(calc(-100% - var(--cat-width))); }
 }
