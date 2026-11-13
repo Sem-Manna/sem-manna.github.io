@@ -1,149 +1,133 @@
-# Sem Manna's website
+# sem manna's website
 
-An academic website built with [Max Grossmann's cyc](https://github.com/mrpg/cyc)
-and Bootstrap 5.3.9. The About, CV, and Research structure comes from
-[the original Google Site](https://sites.google.com/view/semmanna/).
+[Edit](#edit) · [Preview](#preview) · [Publish](#publish) · [Troubleshooting](#troubleshooting) · [Appendix](#appendix)
 
-## Start here on Windows
+**Work in the inner `semmanna.github.io` folder.** Open it in your editor and run
+the commands below in PowerShell from that folder.
 
-Open **this `semmanna.github.io` folder** as your editor workspace. It is the website
-repository. Its parent, `z_Website`, also has a separate Git repository;
-use this inner repository for website changes. The old `../test` Hugo experiment
-is unrelated and has been preserved.
+The routine is **edit → preview → push → check deployment**.
 
-From PowerShell in this folder:
+## Edit
+
+| To change… | Open… |
+| --- | --- |
+| About text, contact details, profile links | [content/index.html](content/index.html) |
+| Research entries, abstracts, coauthor links | [content/research.html](content/research.html) |
+| Your CV | Replace [static/cv/cv.pdf](static/cv/cv.pdf), keeping the same filename. |
+| Colors, fonts, spacing | [static/style.css](static/style.css) |
+| Header name and browser-tab titles | [template/default.html](template/default.html) |
+| Navigation / footer | [template/menu.html](template/menu.html) / [template/footer.html](template/footer.html) |
+| Portrait | Replace [static/img/sem-manna.jpg](static/img/sem-manna.jpg). |
+
+Your separate CV folder is not synced automatically. The `public/` folder is
+generated and overwritten on rebuild; make edits in the source files above.
+
+## Preview
+
+Build, then open the local site:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
+Invoke-Item .\public\index.html
 ```
 
-Then open `public/index.html` in your browser. All CSS, JavaScript, and the portrait
-are stored locally, so this preview works without a web server.
+After each edit, rebuild and refresh the browser. Check the changed page before
+publishing.
 
-For a local HTTP preview instead:
+## Publish
 
-```powershell
-python -m http.server 8000 --bind 127.0.0.1 --directory public
-```
-
-Open <http://127.0.0.1:8000/>. Press Ctrl+C to stop the server.
-After editing a source file, run the build command again and refresh your browser.
-
-The Windows build uses the Git Bash and Strawberry GCC/GNU Make tools already
-installed on this computer. `-ExecutionPolicy Bypass` applies only to that process;
-it does not change the saved PowerShell policy. Tool paths can be supplied with
-`-BashPath`, `-MakePath`, and `-GccPath` if needed on another computer.
-Builds run in a temporary folder to avoid Dropbox locking generated files.
-
-On Linux, the original command is `make` (Bash, GNU Make/utilities, and a C compiler
-are required). Shell scripts must be executable; `.gitattributes` preserves LF
-line endings. If needed after a Windows copy, run `find . -name '*.sh' -exec chmod +x {} +`.
-
-## How the website fits together
-
-`content + meta + template + static → build → public`
-
-| Folder | What to edit |
-| --- | --- |
-| `content/` | Page bodies: `index.html`, `cv.html`, `research.html`, `contact.html`. |
-| `content/.slab` | Relative root path for top-level pages. Keep this hidden file. |
-| `meta/` | Page titles and other values, e.g. `research.html.title`. |
-| `template/default.html` | The shared page layout and asset links. |
-| `template/menu.html` | Navigation links for all pages. |
-| `template/footer.html` | The shared footer. |
-| `static/style.css` | Your styles, loaded after Bootstrap. |
-| `static/img/` | Images, including the portrait from the Google Site. |
-| `static/cv/cv.pdf` | Your CV PDF, shown on the CV page. Replace this file to update it. |
-| `static/vendor/bootstrap/` | Pinned Bootstrap CSS/JS and its license. |
-| `build.ps1` | Build the local preview on Windows. |
-| `.github/workflows/deploy.yml` | Automatic GitHub Pages build and deployment. |
-| `public/` | Generated website. Rebuilt each time; **edit the source folders instead**. |
-
-Try a first edit: change a sentence in `content/index.html`, build, and refresh.
-To adjust spacing or colors, edit `static/style.css`. You can use Bootstrap classes
-directly in the content and template HTML.
-
-The sun/moon button after Research switches between light and dark themes. The
-site initially follows the browser's system preference, then remembers a manual
-choice. `static/theme.js` applies that choice before the stylesheets load. Local
-file previews also carry the choice through navigation links. The theme palettes
-are in `static/style.css`; the tripod telescope is `static/icons/telescope.svg`.
-
-## Update your CV
-
-Drop your PDF into `static/cv/` and name it **`cv.pdf`**, replacing the previous copy.
-Then run the build command and refresh `public/cv.html`. The page embeds the PDF
-in a scrollable viewer and provides a button to open it in a new tab. Browsers
-without an embedded PDF viewer can use the same button.
-
-The initial file is a copy of `Sem Manna - Short CV.pdf`. The original document
-in your separate CV folder is unchanged; future edits there are not automatically
-synced to this website. Keep the website filename `cv.pdf` so its URL stays stable.
-
-## Editing pages
-
-- `{{!!title!!}}` inserts the matching metadata file; `{{!!body!!}}` inserts the page body.
-- `{{##menu.html##}}` includes a shared file. `{{##.slab##}}` reads the relative
-  root path from the page's content directory. Preserve `content/.slab`, which
-  contains `.`. A nested page such as `content/subfolder/page.html` needs its own
-  `content/subfolder/.slab` containing `..`; this is not generated automatically.
-- `{{^^bin/last_updated.sh^^}}` executes a helper during the build.
-  Only use trusted content/templates with cyc, since these marks run commands.
-
-The CV source is `static/cv/cv.pdf`, published at `cv/cv.pdf`. Research entries
-and profile details were initially copied from the original Google Site.
-
-To add a top-level page, create `content/new-page.html`, create
-`meta/new-page.html.title`, and add its link in `template/menu.html`. Rebuild.
-
-## Git and publishing
-
-The GitHub repository is `https://github.com/Sem-Manna/sem-manna.github.io`.
-`origin` points to `https://github.com/Sem-Manna/sem-manna.github.io.git`.
-The local folder is still named `semmanna.github.io`; it does not need to match
-the remote repository name.
-The starter was imported as source files, without merging unrelated Git histories.
-There is no need to pull Max's repository into yours. `git pull` here is for
-updates to **your** GitHub repository.
-
-The workflow in `.github/workflows/deploy.yml` builds with cyc and publishes
-`public/` to GitHub Pages whenever changes are pushed to `main`. It restores
-shell-script executable permissions for the Linux runner. Build output and
-compiled helpers are ignored; commit the source files instead.
-
-The repository's **Settings → Pages → Source** is configured as **GitHub Actions**.
-GitHub Pages requires a public repository on GitHub Free, or a supported paid
-plan for private repositories. The website address is
-<https://sem-manna.github.io/> once the first deployment succeeds.
-
-For future updates, edit the source files, run the local build above, and check
-the preview. Then run these commands from this inner website folder:
+Review your changes, then save and upload them:
 
 ```powershell
 git status
 git diff
 git add .
-git commit -m "Update website"
+git commit -m "Describe your changes"
 git push origin main
 ```
 
-Check the repository's [Actions tab](https://github.com/Sem-Manna/sem-manna.github.io/actions)
-for the deployment result. To publish manually, select **Deploy website to GitHub
-Pages → Run workflow**, choose **main**, and click **Run workflow**. This publishes
-the latest commit on `main`.
+Every push to `main` starts **Deploy website to GitHub Pages**. Check the
+[deployment status](https://github.com/Sem-Manna/sem-manna.github.io/actions):
+the update is published after the run succeeds.
 
-A successful push saves your changes on GitHub; publication requires a successful
-deployment too. If GitHub blocks a run before the build starts because of an
-account issue, resolve that issue, then run the workflow manually on `main`.
+[Website](https://sem-manna.github.io/) · [GitHub repository](https://github.com/Sem-Manna/sem-manna.github.io) · [Deployment workflow](.github/workflows/deploy.yml)
 
-`UPSTREAM.md` retains the original cyc documentation for reference.
+## Troubleshooting
 
-## Source and adaptations
+- **Preview looks unchanged:** rebuild, then refresh. Confirm you edited a source
+  file rather than a generated file in `public/`.
+- **Push succeeded, but the website did not update:** inspect the failed run in
+  [Actions](https://github.com/Sem-Manna/sem-manna.github.io/actions). A push saves
+  the source; the deployment must also succeed. Account errors must be resolved
+  through GitHub before deployment can run.
+- **Publish the latest version manually:** in Actions, select **Deploy website to
+  GitHub Pages → Run workflow → main → Run workflow**.
 
-Imported from cyc commit `913611fe2c37a74a376d3da2fbd9f7613e3be302`.
-`UPSTREAM.md` is its original README and `LICENSE` is its 0BSD license.
-Bootstrap retains its MIT license in `static/vendor/bootstrap/LICENSE`.
+## Appendix
 
-Local adaptations add Bootstrap, personal pages, Windows build support, correct
-Make recursion, support for flat content directories, and propagation of page
-build failures.
+<details>
+<summary>Technical details, extra commands, and project background</summary>
+
+### Files and templates
+
+`content + meta + template + static → build → public`
+
+- [meta/](meta/) holds page headings and title values; [content/cv.html](content/cv.html)
+  controls the CV viewer. [content/contact.html](content/contact.html) is a separate
+  contact page, currently outside the main navigation.
+- [static/theme.js](static/theme.js) controls the light/dark theme;
+  [static/site.js](static/site.js) handles navigation and abstract animations.
+  The header icon is [static/icons/telescope.svg](static/icons/telescope.svg).
+- `{{!!title!!}}` and `{{!!body!!}}` insert metadata and content;
+  `{{##menu.html##}}` includes a shared template.
+- Keep [content/.slab](content/.slab): it contains `.` for top-level links.
+  Nested pages need their own path file, e.g. `content/subfolder/.slab` containing
+  `..`. This is not generated automatically.
+- `{{^^bin/last_updated.sh^^}}` runs a build command. Use trusted content and
+  templates with this generator.
+
+### Add a page
+
+Create `content/new-page.html` and `meta/new-page.html.title`, then add a link in
+[template/menu.html](template/menu.html). Rebuild and preview.
+
+### Other preview and build options
+
+For an HTTP preview, build first, then run:
+
+```powershell
+python -m http.server 8000 --bind 127.0.0.1 --directory public
+```
+
+Open <http://127.0.0.1:8000/>. Stop the server with **Ctrl+C**.
+
+[build.ps1](build.ps1) uses the installed Git Bash and Strawberry GCC/GNU Make.
+On another Windows computer, tool paths can be supplied with `-BashPath`,
+`-MakePath`, and `-GccPath`. Builds use a temporary folder to avoid Dropbox locks.
+`-ExecutionPolicy Bypass` applies only to the build process.
+
+On Linux, with Bash, GNU Make/utilities, and a C compiler installed:
+
+```bash
+find . -type f -name '*.sh' -exec chmod +x {} +
+make
+```
+
+### Repository and hosting
+
+The local folder is `semmanna.github.io`; the renamed GitHub repository is
+`Sem-Manna/sem-manna.github.io`. The parent `z_Website` repository and old `test/`
+Hugo experiment are separate from this website.
+
+Pages is configured to use **GitHub Actions**. The workflow builds on Ubuntu and
+publishes `public/`. Generated output and compiled helpers are excluded from Git.
+
+### Credits
+
+Built with [cyc](https://github.com/mrpg/cyc) and Bootstrap 5.3.9. Initial content
+came from the [original Google Site](https://sites.google.com/view/semmanna/).
+The cyc import is based on commit `913611fe2c37a74a376d3da2fbd9f7613e3be302`.
+
+[Original cyc documentation](UPSTREAM.md) · [cyc license](LICENSE) · [Bootstrap license](static/vendor/bootstrap/LICENSE) · [Asset credits](THIRD_PARTY.md)
+
+</details>
