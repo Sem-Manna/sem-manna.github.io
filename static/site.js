@@ -90,7 +90,7 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     if (!header || !template) return;
 
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let remaining = 60 * 1000;
+    let remaining = 30 * 1000;
     let startedAt = null;
     let waitTimer;
     let cleanupTimer;
