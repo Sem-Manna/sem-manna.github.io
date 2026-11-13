@@ -82,3 +82,71 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
         if (motionPreference.matches) dismissAll();
     });
 })();
+
+// A patient reader earns one visit from the resident research assistant.
+(() => {
+    const header = document.querySelector(".site-header");
+    const template = document.getElementById("header-cat-template");
+    if (!header || !template) return;
+
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let remaining = 3 * 60 * 1000;
+    let startedAt = null;
+    let waitTimer;
+    let cleanupTimer;
+    let hasVisited = false;
+    let cat;
+
+    function pauseCountdown() {
+        window.clearTimeout(waitTimer);
+        if (startedAt !== null) {
+            remaining = Math.max(0, remaining - (performance.now() - startedAt));
+            startedAt = null;
+        }
+    }
+
+    function finishVisit() {
+        window.clearTimeout(cleanupTimer);
+        cat?.remove();
+        cat = null;
+        document.removeEventListener("visibilitychange", syncCountdown);
+        motionPreference.removeEventListener("change", syncCountdown);
+        window.removeEventListener("pagehide", leavePage);
+        window.removeEventListener("pageshow", syncCountdown);
+    }
+
+    function startVisit() {
+        pauseCountdown();
+        if (document.hidden || motionPreference.matches || hasVisited) return;
+        hasVisited = true;
+        cat = template.content.firstElementChild.cloneNode(true);
+        cat.addEventListener("animationend", (event) => {
+            if (event.animationName === "cat-cross") finishVisit();
+        });
+        header.append(cat);
+        // Also clean up if an animation-end event is interrupted or unavailable.
+        cleanupTimer = window.setTimeout(finishVisit, 6000);
+    }
+
+    function syncCountdown() {
+        pauseCountdown();
+        if (document.hidden || motionPreference.matches) {
+            if (hasVisited) finishVisit();
+            return;
+        }
+        if (hasVisited) return;
+        startedAt = performance.now();
+        waitTimer = window.setTimeout(startVisit, remaining);
+    }
+
+    function leavePage() {
+        pauseCountdown();
+        if (hasVisited) finishVisit();
+    }
+
+    document.addEventListener("visibilitychange", syncCountdown);
+    motionPreference.addEventListener("change", syncCountdown);
+    window.addEventListener("pagehide", leavePage);
+    window.addEventListener("pageshow", syncCountdown);
+    syncCountdown();
+})();
