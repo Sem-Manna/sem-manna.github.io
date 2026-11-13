@@ -8,7 +8,7 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     }
 });
 
-// Opening an abstract briefly adds a decorative audience or a few incentives.
+// Reopening an abstract briefly adds a decorative audience or a few incentives.
 // Native details/summary controls continue to handle the actual interaction.
 (() => {
     const abstracts = document.querySelectorAll(".paper-abstract[data-surprise]");
@@ -41,10 +41,16 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
         const cast = casts[details.dataset.surprise];
         const summary = details.querySelector("summary");
         if (!cast || !summary) continue;
+        let hasOpened = false;
 
         details.addEventListener("toggle", () => {
             dismiss(details);
-            if (!details.open || motionPreference.matches || document.hidden) return;
+            if (!details.open) return;
+            if (!hasOpened) {
+                hasOpened = true;
+                return;
+            }
+            if (motionPreference.matches || document.hidden) return;
 
             const layer = document.createElement("span");
             layer.className = "paper-surprise";
