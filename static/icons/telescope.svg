@@ -1,11 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <title>Telescope on a tripod</title>
+  <style>
+    /* A 4.5-second sweep every 45 seconds; the tripod stays planted. */
+    @media (prefers-reduced-motion: no-preference) {
+      .telescope-barrel {
+        transform-box: view-box;
+        transform-origin: 32px 25px;
+        animation: telescope-scan 90s cubic-bezier(.45, 0, .55, 1) infinite;
+      }
+    }
+    @keyframes telescope-scan {
+      0%, 45% { transform: rotate(-30deg); }
+      50%, 95% { transform: rotate(-150deg); }
+      100% { transform: rotate(-30deg); }
+    }
+  </style>
   <g stroke-linecap="round" stroke-linejoin="round">
     <path d="M32 37v22M31 37 16 57m17-20 15 20" stroke="#627f92" stroke-width="3.5"/>
     <path d="m22 48 10 4 10-4" stroke="#8fa8b9" stroke-width="2"/>
     <path d="M32 29v8" stroke="#627f92" stroke-width="5"/>
     <circle cx="32" cy="35" r="3.5" fill="#d6ad59" stroke="#a3813d" stroke-width="1.5"/>
-    <g transform="rotate(-30 32 25)">
+    <g class="telescope-barrel" transform="rotate(-30 32 25)">
       <path d="M8 22h9v6H8z" fill="#627f92" stroke="#627f92" stroke-width="2"/>
       <path d="M7 21v8" stroke="#8fa8b9" stroke-width="3"/>
       <path d="M16 19h29v12H16z" fill="#cbd7df" stroke="#627f92" stroke-width="2"/>
