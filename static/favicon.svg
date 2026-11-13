@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <title>Sem Manna ? telescope</title>
+  <rect width="64" height="64" rx="12" fill="#f1f5f8"/>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 37v22M31 37 16 57m17-20 15 20" stroke="#627f92" stroke-width="3.5"/>
+    <path d="m22 48 10 4 10-4" stroke="#8fa8b9" stroke-width="2"/>
+    <path d="M32 29v8" stroke="#627f92" stroke-width="5"/>
+    <circle cx="32" cy="35" r="3.5" fill="#d6ad59" stroke="#a3813d" stroke-width="1.5"/>
+    <g class="telescope-barrel" transform="rotate(-30 32 25)">
+      <path d="M8 22h9v6H8z" fill="#627f92" stroke="#627f92" stroke-width="2"/>
+      <path d="M7 21v8" stroke="#8fa8b9" stroke-width="3"/>
+      <path d="M16 19h29v12H16z" fill="#cbd7df" stroke="#627f92" stroke-width="2"/>
+      <path d="M20 22h21" stroke="#f5fafc" stroke-width="2.5"/>
+      <path d="M43 16h7v18h-7z" fill="#327bb3" stroke="#627f92" stroke-width="2"/>
+      <ellipse cx="50" cy="25" rx="3" ry="9" fill="#233b51" stroke="#8fa8b9" stroke-width="2"/>
+      <path d="M50 20v5" stroke="#90c8e0" stroke-width="1.6"/>
+    </g>
+  </g>
+</svg>
