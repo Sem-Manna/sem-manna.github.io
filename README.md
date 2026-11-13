@@ -1,13 +1,13 @@
 # Sem Manna's website
 
-A local starting point built with [Max Grossmann's cyc](https://github.com/mrpg/cyc)
+An academic website built with [Max Grossmann's cyc](https://github.com/mrpg/cyc)
 and Bootstrap 5.3.9. The About, CV, and Research structure comes from
-[the current Google Site](https://sites.google.com/view/semmanna/).
+[the original Google Site](https://sites.google.com/view/semmanna/).
 
 ## Start here on Windows
 
 Open **this `semmanna.github.io` folder** as your editor workspace. It is the website
-repository. Its parent, `z_Website`, also has a newly initialized Git repository;
+repository. Its parent, `z_Website`, also has a separate Git repository;
 use this inner repository for website changes. The old `../test` Hugo experiment
 is unrelated and has been preserved.
 
@@ -46,6 +46,7 @@ line endings. If needed after a Windows copy, run `find . -name '*.sh' -exec chm
 | Folder | What to edit |
 | --- | --- |
 | `content/` | Page bodies: `index.html`, `cv.html`, `research.html`, `contact.html`. |
+| `content/.slab` | Relative root path for top-level pages. Keep this hidden file. |
 | `meta/` | Page titles and other values, e.g. `research.html.title`. |
 | `template/default.html` | The shared page layout and asset links. |
 | `template/menu.html` | Navigation links for all pages. |
@@ -54,6 +55,8 @@ line endings. If needed after a Windows copy, run `find . -name '*.sh' -exec chm
 | `static/img/` | Images, including the portrait from the Google Site. |
 | `static/cv/cv.pdf` | Your CV PDF, shown on the CV page. Replace this file to update it. |
 | `static/vendor/bootstrap/` | Pinned Bootstrap CSS/JS and its license. |
+| `build.ps1` | Build the local preview on Windows. |
+| `.github/workflows/deploy.yml` | Automatic GitHub Pages build and deployment. |
 | `public/` | Generated website. Rebuilt each time; **edit the source folders instead**. |
 
 Try a first edit: change a sentence in `content/index.html`, build, and refresh.
@@ -80,13 +83,15 @@ synced to this website. Keep the website filename `cv.pdf` so its URL stays stab
 ## Editing pages
 
 - `{{!!title!!}}` inserts the matching metadata file; `{{!!body!!}}` inserts the page body.
-- `{{##menu.html##}}` includes a shared file. `{{##.slab##}}` supplies the relative
-  path to the root: `.` for top-level pages and `..` for pages one folder below it.
+- `{{##menu.html##}}` includes a shared file. `{{##.slab##}}` reads the relative
+  root path from the page's content directory. Preserve `content/.slab`, which
+  contains `.`. A nested page such as `content/subfolder/page.html` needs its own
+  `content/subfolder/.slab` containing `..`; this is not generated automatically.
 - `{{^^bin/last_updated.sh^^}}` executes a helper during the build.
   Only use trusted content/templates with cyc, since these marks run commands.
 
-The CV is served from `static/cv/cv.pdf`. Research entries and profile details
-were copied from the live Google Site as a starting point.
+The CV source is `static/cv/cv.pdf`, published at `cv/cv.pdf`. Research entries
+and profile details were initially copied from the original Google Site.
 
 To add a top-level page, create `content/new-page.html`, create
 `meta/new-page.html.title`, and add its link in `template/menu.html`. Rebuild.
@@ -106,7 +111,7 @@ The workflow in `.github/workflows/deploy.yml` builds with cyc and publishes
 shell-script executable permissions for the Linux runner. Build output and
 compiled helpers are ignored; commit the source files instead.
 
-In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**.
+The repository's **Settings → Pages → Source** is configured as **GitHub Actions**.
 GitHub Pages requires a public repository on GitHub Free, or a supported paid
 plan for private repositories. The website address is
 <https://sem-manna.github.io/> once the first deployment succeeds.
@@ -116,14 +121,22 @@ the preview. Then run these commands from this inner website folder:
 
 ```powershell
 git status
+git diff
 git add .
 git commit -m "Update website"
 git push origin main
 ```
 
-Check the repository's **Actions** tab for the deployment result. You can also
-run **Deploy website to GitHub Pages** manually from that tab. `UPSTREAM.md`
-retains the original cyc documentation for reference.
+Check the repository's [Actions tab](https://github.com/Sem-Manna/sem-manna.github.io/actions)
+for the deployment result. To publish manually, select **Deploy website to GitHub
+Pages → Run workflow**, choose **main**, and click **Run workflow**. This publishes
+the latest commit on `main`.
+
+A successful push saves your changes on GitHub; publication requires a successful
+deployment too. If GitHub blocks a run before the build starts because of an
+account issue, resolve that issue, then run the workflow manually on `main`.
+
+`UPSTREAM.md` retains the original cyc documentation for reference.
 
 ## Source and adaptations
 
