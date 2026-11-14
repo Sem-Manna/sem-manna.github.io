@@ -223,6 +223,11 @@ a:hover { text-decoration-thickness: 2px; }
 @media (prefers-reduced-motion: reduce), (forced-colors: active), print {
     .rain-layer { display: none !important; }
 }
+.rain-worm { display: none; position: fixed; width: 64px; height: 64px; pointer-events: none; user-select: none; z-index: 3; image-rendering: pixelated; }
+[data-bs-theme="rain"] .rain-worm.is-visible { display: block; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active), print {
+    .rain-worm { display: none !important; }
+}
 .page-title { margin-bottom: 2rem; font-size: 1.8rem; font-weight: 550; letter-spacing: -.035em; }
 .intro-heading { font-size: 1.5rem; font-weight: 550; margin-bottom: 1.25rem; }
 .profile p { margin-bottom: .65rem; }

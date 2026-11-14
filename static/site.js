@@ -8,6 +8,33 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     }
 });
 
+// Close the expanded mobile navigation when the reader scrolls down.
+(() => {
+    const navigation = document.getElementById("site-navigation");
+    const narrow = window.matchMedia("(max-width: 575.98px)");
+    if (!navigation || !window.bootstrap?.Collapse) return;
+    let previousY = Math.max(0, window.scrollY);
+    let downwardDistance = 0;
+
+    navigation.addEventListener("shown.bs.collapse", () => {
+        previousY = Math.max(0, window.scrollY);
+        downwardDistance = 0;
+    });
+    window.addEventListener("scroll", () => {
+        const currentY = Math.max(0, window.scrollY);
+        const delta = currentY - previousY;
+        previousY = currentY;
+        if (!narrow.matches || !navigation.classList.contains("show")) {
+            downwardDistance = 0;
+            return;
+        }
+        downwardDistance = delta > 0 ? downwardDistance + delta : 0;
+        if (downwardDistance < 8) return;
+        window.bootstrap.Collapse.getOrCreateInstance(navigation, { toggle: false }).hide();
+        downwardDistance = 0;
+    }, { passive: true });
+})();
+
 // Reopening an abstract briefly adds a decorative audience or a few incentives.
 // Native details/summary controls continue to handle the actual interaction.
 (() => {
@@ -246,6 +273,83 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     window.addEventListener("pagehide", clearRain);
     window.addEventListener("pageshow", syncRain);
     syncRain();
+})();
+
+// The rain brings a little worm out into the grass margins every twenty seconds.
+(() => {
+    const template = document.getElementById("rain-worm-template");
+    const main = document.querySelector(".site-main");
+    if (!template || !main) return;
+    const root = document.documentElement;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const eligible = () => root.dataset.bsTheme === "rain" && !document.hidden && !motion.matches;
+    let waitTimer;
+    let cleanupTimer;
+    let worm;
+
+    function dismiss() {
+        window.clearTimeout(cleanupTimer);
+        worm?.remove();
+        worm = null;
+    }
+
+    function schedule() {
+        window.clearTimeout(waitTimer);
+        if (eligible()) waitTimer = window.setTimeout(visit, 20 * 1000);
+        else dismiss();
+    }
+
+    function marginSpot() {
+        const size = 64;
+        const bounds = main.getBoundingClientRect();
+        const sides = [
+            { min: 8, max: bounds.left - size - 20 },
+            { min: bounds.right + 20, max: window.innerWidth - size - 8 },
+        ].filter(side => side.max >= side.min);
+        const top = (document.querySelector(".site-header")?.getBoundingClientRect().bottom || 0) + 12;
+        const bottom = window.innerHeight - size - 20;
+        // Small screens without grass margins get no overlay on the reading area.
+        if (!sides.length || bottom < top) return null;
+        const side = sides[Math.floor(Math.random() * sides.length)];
+        return { x: side.min + Math.random() * (side.max - side.min), y: top + Math.random() * (bottom - top) };
+    }
+
+    function visit() {
+        schedule();
+        if (!eligible()) return;
+        const spot = marginSpot();
+        if (!spot) return;
+        dismiss();
+        const image = template.content.firstElementChild.cloneNode(true);
+        image.style.left = `${spot.x}px`;
+        image.style.top = `${spot.y}px`;
+        worm = image;
+        image.addEventListener("load", () => {
+            if (worm !== image || !eligible()) return;
+            window.clearTimeout(cleanupTimer);
+            image.classList.add("is-visible");
+            cleanupTimer = window.setTimeout(dismiss, 3000);
+        }, { once: true });
+        image.addEventListener("error", () => {
+            if (worm === image) dismiss();
+        }, { once: true });
+        document.body.append(image);
+        cleanupTimer = window.setTimeout(dismiss, 10000);
+        const source = new URL(image.dataset.src, window.location.href);
+        source.searchParams.set("visit", Date.now());
+        image.src = source.href;
+    }
+
+    new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ["data-bs-theme"] });
+    document.addEventListener("visibilitychange", schedule);
+    motion.addEventListener("change", schedule);
+    window.addEventListener("resize", dismiss);
+    window.addEventListener("pagehide", () => {
+        window.clearTimeout(waitTimer);
+        dismiss();
+    });
+    window.addEventListener("pageshow", schedule);
+    schedule();
 })();
 
 // A small shooting star crosses the dark-mode viewport once a minute.
