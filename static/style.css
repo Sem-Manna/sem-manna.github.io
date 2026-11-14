@@ -70,7 +70,7 @@ body::before {
     z-index: -1;
     pointer-events: none;
 }
-[data-bs-theme="light"] body::before {
+:is([data-bs-theme="light"], [data-bs-theme="rain"]) body::before {
     background-color: var(--bs-body-bg);
     background-image: url("img/pixel-grass-tile.png?v=top-left-flower");
     background-size: 384px 384px;
@@ -146,21 +146,21 @@ a:hover { text-decoration-thickness: 2px; }
 .theme-toggle:hover { color: var(--site-nav-active); background: var(--site-toggle-hover); border-color: var(--site-border); }
 .theme-toggle:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
 .theme-icon { display: block; width: 1.2rem; height: 1.2rem; }
-.theme-icon--sun { display: none; }
-[data-bs-theme="dark"] .theme-icon--moon { display: none; }
-[data-bs-theme="dark"] .theme-icon--sun { display: block; }
+.theme-icon--sun, .theme-icon--rain { display: none; }
+:is([data-bs-theme="dark"], [data-bs-theme="rain"]) .theme-icon--moon { display: none; }
+[data-bs-theme="dark"] .theme-icon--rain, [data-bs-theme="rain"] .theme-icon--sun { display: block; }
 @media (min-width: 576px) {
     .site-header .navbar-nav { align-items: center; }
 }
 .btn-outline-primary { --bs-btn-color: var(--bs-link-color); --bs-btn-border-color: var(--bs-link-color); --bs-btn-hover-color: var(--bs-body-bg); --bs-btn-hover-bg: var(--bs-link-color); --bs-btn-hover-border-color: var(--bs-link-color); --bs-btn-focus-shadow-rgb: var(--bs-link-color-rgb); --bs-btn-active-color: var(--bs-body-bg); --bs-btn-active-bg: var(--bs-link-color); --bs-btn-active-border-color: var(--bs-link-color); --bs-btn-disabled-color: var(--bs-link-color); --bs-btn-disabled-border-color: var(--bs-link-color); }
 .site-main { padding-top: 3rem; padding-bottom: 4rem; min-height: 65vh; }
 /* A quiet reading surface fades into the garden along the outer edges. */
-[data-bs-theme="light"] .site-main {
+:is([data-bs-theme="light"], [data-bs-theme="rain"]) .site-main {
     --reading-surface: rgba(var(--bs-body-bg-rgb), .96);
     position: relative;
     isolation: isolate;
 }
-[data-bs-theme="light"] .site-main::before {
+:is([data-bs-theme="light"], [data-bs-theme="rain"]) .site-main::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -170,9 +170,58 @@ a:hover { text-decoration-thickness: 2px; }
     box-shadow: 0 0 2rem 1.25rem var(--reading-surface);
 }
 /* Keep the soft edge behind the footer's text as well. */
-[data-bs-theme="light"] .site-footer { position: relative; z-index: 0; }
+:is([data-bs-theme="light"], [data-bs-theme="rain"]) .site-footer { position: relative; z-index: 0; }
 @media (max-width: 767.98px) {
-    [data-bs-theme="light"] .site-main { --reading-surface: var(--bs-body-bg); }
+    :is([data-bs-theme="light"], [data-bs-theme="rain"]) .site-main { --reading-surface: var(--bs-body-bg); }
+}
+
+/* A sparse, faint shower drifts down and slightly right without catching clicks. */
+.rain-layer { display: none; position: fixed; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 2; opacity: .36; }
+[data-bs-theme="rain"] .rain-layer { display: block; }
+.rain-layer span {
+    position: absolute;
+    top: -2rem;
+    left: var(--rain-x);
+    width: 1.44px;
+    height: var(--rain-length);
+    background: linear-gradient(transparent, rgba(58, 117, 175, .8));
+    background-position: bottom;
+    background-repeat: no-repeat;
+    animation: rain-fall var(--rain-duration) linear var(--rain-delay) infinite;
+}
+@keyframes rain-fall {
+    from { transform: translate3d(0, 0, 0) rotate(-8deg); }
+    to { transform: translate3d(14vh, calc(100vh + 4rem), 0) rotate(-8deg); }
+}
+.rain-layer .rain-drop--landing { animation-name: rain-land; }
+.rain-drop--landing::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 5px;
+    height: 1.5px;
+    border: 1px solid rgba(58, 117, 175, .95);
+    border-radius: 50%;
+    opacity: 0;
+    animation: rain-splash var(--rain-duration) linear var(--rain-delay) infinite;
+}
+@keyframes rain-land {
+    0% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+    0%, 76% { background-size: 100% 100%; }
+    80%, 100% {
+        transform: translate3d(var(--rain-drift), calc(var(--rain-end) + 2rem - var(--rain-length)), 0) rotate(-8deg);
+        background-size: 100% 0%;
+    }
+}
+@keyframes rain-splash {
+    0%, 79% { opacity: 0; transform: translate(-50%, -50%) rotate(8deg) scale(.3); }
+    83% { opacity: 1; transform: translate(-50%, -50%) rotate(8deg) scale(.6); }
+    89% { opacity: 1; transform: translate(-50%, -50%) rotate(8deg) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) rotate(8deg) scale(1.6); }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active), print {
+    .rain-layer { display: none !important; }
 }
 .page-title { margin-bottom: 2rem; font-size: 1.8rem; font-weight: 550; letter-spacing: -.035em; }
 .intro-heading { font-size: 1.5rem; font-weight: 550; margin-bottom: 1.25rem; }

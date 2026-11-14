@@ -191,6 +191,63 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     syncCountdown();
 })();
 
+// Rain is decorative and only runs while its mode and the page are active.
+(() => {
+    const root = document.documentElement;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let layer;
+
+    function clearRain() {
+        layer?.remove();
+        layer = null;
+    }
+
+    function syncRain() {
+        if (root.dataset.bsTheme !== "rain" || document.hidden || motion.matches) {
+            clearRain();
+            return;
+        }
+        if (layer) return;
+        layer = document.createElement("div");
+        layer.className = "rain-layer";
+        layer.setAttribute("aria-hidden", "true");
+        const baseCount = Math.max(12, Math.min(40, window.innerWidth / 40));
+        const count = Math.round(1.1 * Math.round(1.15 * Math.round(1.3 * baseCount)));
+        // Give each landing its own height band, then shuffle to avoid diagonal rows.
+        const landingCount = count - Math.floor(count / 5);
+        const landingDepths = Array.from({ length: landingCount }, (_, i) =>
+            .12 + (i + Math.random()) / landingCount * .82);
+        for (let i = landingDepths.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [landingDepths[i], landingDepths[j]] = [landingDepths[j], landingDepths[i]];
+        }
+        for (let i = 0; i < count; i++) {
+            const drop = document.createElement("span");
+            const lands = i % 5 !== 4;
+            const depth = lands ? landingDepths.pop() : 1;
+            const duration = (2.3 + Math.random() * 1.2) / (1.2 * 1.4 * 1.2);
+            if (lands) drop.className = "rain-drop--landing";
+            for (const [name, value] of Object.entries({
+                x: `${-10 + (i + Math.random()) / count * 120}%`,
+                length: `${(10 + Math.random() * 8) * 1.44}px`,
+                duration: `${duration * (lands ? depth / .8 : 1)}s`,
+                delay: `${-Math.random() * 4}s`,
+                end: `${depth * 100}vh`,
+                drift: `${depth * 14}vh`,
+            })) drop.style.setProperty(`--rain-${name}`, value);
+            layer.append(drop);
+        }
+        document.body.append(layer);
+    }
+
+    new MutationObserver(syncRain).observe(root, { attributes: true, attributeFilter: ["data-bs-theme"] });
+    document.addEventListener("visibilitychange", syncRain);
+    motion.addEventListener("change", syncRain);
+    window.addEventListener("pagehide", clearRain);
+    window.addEventListener("pageshow", syncRain);
+    syncRain();
+})();
+
 // A small shooting star crosses the dark-mode viewport once a minute.
 (() => {
     const template = document.getElementById("shooting-star-template");

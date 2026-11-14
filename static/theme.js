@@ -1,10 +1,11 @@
-// Run before the stylesheets so a saved dark theme is applied before paint.
+// Apply the saved appearance before the stylesheets are painted.
 (() => {
     const storageKey = "sem-manna-theme";
     const root = document.documentElement;
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
     const filePreview = window.location.protocol === "file:";
-    const validTheme = (value) => value === "light" || value === "dark";
+    const nextTheme = { light: "dark", dark: "rain", rain: "light" };
+    const validTheme = (value) => Object.hasOwn(nextTheme, value);
     let preference = null;
     let currentTheme;
 
@@ -44,7 +45,7 @@
     }
 
     function syncControls() {
-        const label = currentTheme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+        const label = `Switch to ${nextTheme[currentTheme]} mode`;
         for (const button of document.querySelectorAll("[data-theme-toggle]")) {
             button.setAttribute("aria-label", label);
             button.setAttribute("title", label);
@@ -67,7 +68,7 @@
     function apply(theme) {
         currentTheme = theme;
         root.setAttribute("data-bs-theme", theme);
-        root.style.colorScheme = theme;
+        root.style.colorScheme = theme === "dark" ? "dark" : "light";
         syncControls();
         syncPreviewAddress();
         syncPreviewLinks();
@@ -82,7 +83,7 @@
         syncPreviewLinks();
         for (const button of document.querySelectorAll("[data-theme-toggle]")) {
             button.addEventListener("click", () => {
-                preference = currentTheme === "dark" ? "light" : "dark";
+                preference = nextTheme[currentTheme];
                 remember(preference);
                 apply(preference);
             });
