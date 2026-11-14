@@ -61,6 +61,28 @@
 }
 html { scroll-padding-top: 5rem; }
 body { font-size: 1.05rem; line-height: 1.75; }
+
+/* Keep the fixed photograph behind the content, with text at full opacity. */
+[data-bs-theme="dark"] body { isolation: isolate; }
+[data-bs-theme="dark"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--bs-body-bg);
+    background-image:
+        radial-gradient(ellipse at 50% 38%, rgba(17, 26, 34, .42), rgba(17, 26, 34, .22) 50%, rgba(17, 26, 34, 0) 85%),
+        url("img/hubble_n44_wfc3_new_large_1mb-jpg.webp");
+    background-position: center, center 40%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: .18;
+}
+@media print, (forced-colors: active), (prefers-reduced-transparency: reduce) {
+    [data-bs-theme="dark"] body::before { display: none; }
+}
+
 ::selection { background-color: #ffe680; color: #1b2731; text-shadow: none; }
 @media (forced-colors: active) {
     ::selection { background-color: Highlight; color: HighlightText; }
@@ -95,6 +117,18 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 .navbar .nav-link { color: var(--site-nav-color); font-size: .94rem; }
+/* Move the small GIF itself; its own frames supply the light pulse. */
+.shooting-star { display: none; position: fixed; inset: 0; overflow: hidden; pointer-events: none; user-select: none; z-index: 1; }
+[data-bs-theme="dark"] .shooting-star.is-running { display: block; }
+.shooting-star img { position: absolute; left: var(--star-x); top: var(--star-y); width: var(--star-size); height: auto; animation: shooting-star-cross 2s linear both; }
+@keyframes shooting-star-cross {
+    from { transform: translate(0, 0); }
+    to { transform: translate(calc(0px - var(--star-distance)), var(--star-distance)); }
+}
+@media (prefers-reduced-motion: reduce), print {
+    .shooting-star { display: none !important; }
+}
+
 .navbar .nav-link.active { color: var(--site-nav-active); text-decoration: underline; text-underline-offset: .4em; }
 .navbar-toggler { border-color: var(--site-border); }
 .theme-toggle-item { display: flex; align-items: center; margin-left: .25rem; }
@@ -129,6 +163,8 @@ a:hover { text-decoration-thickness: 2px; }
 .ukraine-flag { flex: 0 0 2.4rem; height: 1.6rem; background: linear-gradient(to bottom, #0057b7 50%, #ffd700 50%); }
 .support-arrow { margin-left: auto; font-size: 1.25rem; }
 .site-footer { border-top: 1px solid var(--site-divider); padding-top: 1.3rem; padding-bottom: 2rem; font-size: .85rem; color: var(--site-muted); }
+.background-credit { display: none; margin: .4rem 0 0; }
+[data-bs-theme="dark"] .background-credit { display: block; }
 .contact-details dt { font-size: .9rem; color: var(--site-muted); font-weight: 500; margin-top: 1.5rem; }
 .research-entry { margin-bottom: 2rem; }
 .research-entry h3 { line-height: 1.5; }

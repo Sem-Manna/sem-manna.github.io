@@ -190,3 +190,70 @@ document.querySelectorAll(".navbar .nav-link").forEach((link) => {
     window.addEventListener("pageshow", syncCountdown);
     syncCountdown();
 })();
+
+// A small shooting star crosses the dark-mode viewport once a minute.
+(() => {
+    const template = document.getElementById("shooting-star-template");
+    if (!template) return;
+    const root = document.documentElement;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const eligible = () => root.dataset.bsTheme === "dark" && !document.hidden && !motion.matches;
+    let waitTimer;
+    let cleanupTimer;
+    let star;
+
+    function dismiss() {
+        window.clearTimeout(cleanupTimer);
+        star?.remove();
+        star = null;
+    }
+
+    function schedule() {
+        window.clearTimeout(waitTimer);
+        if (eligible()) waitTimer = window.setTimeout(visit, 60 * 1000);
+        else dismiss();
+    }
+
+    function visit() {
+        schedule();
+        if (!eligible()) return;
+        dismiss();
+        const layer = template.content.firstElementChild.cloneNode(true);
+        const image = layer.querySelector("img");
+        const size = Math.min(144, Math.max(100, window.innerWidth * .12));
+        // Only the horizontal origin varies; centering the GIF here starts its head above the top edge.
+        const x = window.innerWidth * (.25 + .70 * Math.random());
+        const y = 0;
+        const distance = Math.min(x + size, window.innerHeight - y + size);
+        for (const [name, value] of Object.entries({
+            x: x - size / 2, y: y - size / 2, size, distance,
+        })) layer.style.setProperty(`--star-${name}`, `${value}px`);
+        star = layer;
+        image.addEventListener("load", () => {
+            if (star !== layer || !eligible()) return;
+            window.clearTimeout(cleanupTimer);
+            layer.classList.add("is-running");
+            cleanupTimer = window.setTimeout(dismiss, 2000);
+        }, { once: true });
+        image.addEventListener("error", () => {
+            if (star === layer) dismiss();
+        }, { once: true });
+        document.body.append(layer);
+        cleanupTimer = window.setTimeout(dismiss, 10000);
+        // A fresh URL restarts the GIF, including when previewed from file://.
+        const source = new URL(image.dataset.src, window.location.href);
+        source.searchParams.set("visit", Date.now());
+        image.src = source.href;
+    }
+
+    new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ["data-bs-theme"] });
+    document.addEventListener("visibilitychange", schedule);
+    motion.addEventListener("change", schedule);
+    window.addEventListener("resize", dismiss);
+    window.addEventListener("pagehide", () => {
+        window.clearTimeout(waitTimer);
+        dismiss();
+    });
+    window.addEventListener("pageshow", schedule);
+    schedule();
+})();
